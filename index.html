@@ -131,10 +131,6 @@
                 uxui.state.previous.dataset.selected = 'no';
                 uxui.state.previous = document.querySelector(`#u-${uxui.state.x}-${uxui.state.y}`);
                 uxui.state.previous.dataset.selected = 'yes';
-
-                // Inherit rotation state from newly selected square
-                const im = document.querySelector(`#u-${uxui.state.x}-${uxui.state.y} ui`);
-                console.log(im.className.split('-')[1]);
             }
 
             Sound.play(1);
