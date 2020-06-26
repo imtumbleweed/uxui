@@ -7,6 +7,9 @@
     <meta name = "author" content = "You">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
 
+    <!-- sheets -->
+    <link rel = "stylesheet" href = "uxui.css">
+
     <!-- Note: type "module", not "javascript" -->
     <script type = "module">
 
@@ -154,103 +157,6 @@
         }
 
     </script>
-
-    <style type = "text/css">
-
-        body {
-          position: relative;
-          background: black;
-          overflow: hidden;
-        }
-
-        #root {
-            position: absolute;
-            top: 100px;
-            left: 300px;
-        }
-
-        main {
-          height: 100%
-        }
-
-        * { font-family: Arial; }
-
-        /* padding shouldn't impact element width this is also CSS grid's default setting */
-        * { box-sizing: border-box }
-
-        /* vertical and horizontal align */
-        .f { display: flex; height: 100%; }
-        .v { align-items: center }
-        .h { justify-content: center }
-
-        /* Chrome applies blue "usability" background  to autofilled input boxes, but it's a nightmare for custom design */
-        input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px white inset !important }
-
-        /* Remove Chrome outline (same reason as above) */
-        *:focus { outline: none }
-
-        /* Mobile first, means this media query first -- use min-width in ascending order
-        Smallest phone screen (iphone, android, etc.) */
-        @media screen and (min-width: 600px) {
-        
-        }
-
-        /* Next wider view (iphone pro, etc) */
-        @media screen and (min-width: 800px) {
-        
-        }
-
-        /* Next wider view (tablets) */
-        @media screen and (min-width: 1000px) {
-        
-        }
-
-        /* Full screen desktop */
-        @media screen and (min-width: 1200px) {
-        
-        }
-
-        #root {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          transition: 0.3s;
-        }
-
-        @keyframes sel {
-          0% { transform: scale(1) }
-          50% { transform: scale(1.05) }
-          100% { transform: scale(1) }
-        }
-
-        @keyframes glo {
-          0% { box-shadow: 0 0 0 #000 }
-          50% { box-shadow: 0 0 20px lime, inset 0 0 150px lime }
-          100% { box-shadow: 0 0 0 #000 }
-        }
-
-        ui, im {
-          position: inherit;
-          display: inherit;
-          top: 0;
-          left: 0;
-          width: inherit;
-          height: inherit;
-          transition: 0.1s;
-        }
-
-        [data-selected=yes] { z-index: 1 }
-        [data-selected=yes] { animation-name: sel; animation-duration: 1s; animation-iteration-count: infinite; animation-timing-function: ease-out }
-        [data-selected=yes] im { animation-name: glo; animation-duration: 1s; animation-iteration-count: infinite; animation-timing-function: ease-out }
-
-        .angle-0 { transform: rotate(0deg) }
-        .angle-1 { transform: rotate(90deg) }
-        .angle-2 { transform: rotate(180deg) }
-        .angle-3 { transform: rotate(270deg) }
-        .angle-4 { transform: rotate(360deg) }
-        .angle-5 { transform: rotate(430deg) }
-
-    </style>
 
     </head>
 
