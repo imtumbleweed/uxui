@@ -1,0 +1,265 @@
+<html>
+    <head>
+    <title>UX-UI</title>
+    <meta charset="UTF-8">    
+    <meta name = "description" content = "HTML starter reset file">
+    <meta name = "keywords" content = "ux, ui, html, css, events, mouse, keyboard, media queries">
+    <meta name = "author" content = "You">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+
+    <!-- Note: type "module", not "javascript" -->
+    <script type = "module">
+
+        // This gets us sound fx
+        import { SoundStation } from "./audio.js";
+
+        // JavaScript Audio API
+        let Sound = new SoundStation();
+        
+        // Map variables representing keys to ASCII codes
+        let [ A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z ]
+          = Array.from({ length: 26 }, (v, i) => 65 + i);
+
+        // Misc keys
+        const Delete = 46;
+        const Shift = 16;
+        const Ctrl = 17;
+        const Alt = 18;
+
+        // Arrow keys
+        const Left = 37;
+        const Right = 39;
+        const Up = 38;
+        const Down = 40;
+
+        // Space key
+        const Space = 32;
+
+        // Placeholder
+        function func() { }
+
+        // State object
+        class UXUI {
+          constructor() {
+            this.state = {
+              angle   : 0, // Angle ID to CSS rotate transform of the currently selected item
+              type    :-1, // Not used
+              x       : 1, // Default selected item starts in the middle
+              y       : 1,
+              cols    : 3,
+              rows    : 3,
+              previous: null,
+              current : 0
+            }
+            this.render();
+          }
+          setType(type) { 
+            if (this.state.type !== type) {
+              this.state.type = type;
+              this.render();
+            }
+          }
+          render() {
+            window.root.innerHTML = `<nav id = "ux-ui">
+              <ux><ui><im></im></ui></ux><ux><ui><im></im></ui></ux><ux><ui><im></im></ui></ux>
+              <ux><ui><im></im></ui></ux><ux><ui><im></im></ui></ux><ux><ui><im></im></ui></ux>
+              <ux><ui><im></im></ui></ux><ux><ui><im></im></ui></ux><ux><ui><im></im></ui></ux>
+            <nav>`;
+            let index = 0; const dim = 300;
+            document.querySelectorAll("#ux-ui ux").forEach(item => {
+              const x = parseInt(index / 3); 
+              const y = parseInt(index % 3);
+              item.style.position = `absolute`;
+              item.setAttribute(`id`, `u-${x}-${y}`);
+              item.style.top = `${y * dim}px`;
+              item.style.left = `${x * dim}px`;
+              item.style.width = `${dim}px`;
+              item.style.height = `${dim}px`;
+              index++;
+            });
+            index = 0;
+            document.querySelectorAll("#ux-ui im").forEach(item => {
+              const x = parseInt(index / 3);
+              const y = parseInt(index % 3);
+              item.style.backgroundImage = `url('uxui.png')`;
+              item.style.backgroundPosition = `-${x*dim}px -${y*dim}px`;
+              // random rotation
+              item.className = `angle-${Math.floor(Math.random() * 4)}`;
+              index++;
+            });
+            // Keep a copy of previously selected element
+            this.state.previous = document.querySelector(`#u-1-1`);
+            // Select middle block as current (and therefore previous for future reference)
+            this.state.previous.dataset.selected = 'yes';
+          }
+        }
+
+        // Create UXUI object
+        let uxui = new UXUI();
+
+        // Handle keyboard
+        document.body.addEventListener("keydown", event => {
+
+            let key = event.which || event.keyCode;
+
+            if (key == Z) { // Counter-clockwise - rotate currently selected item
+                uxui.state.angle < 4 && uxui.state.angle++;
+                document.querySelector(`#u-${uxui.state.x}-${uxui.state.y} im`).className = `angle-${uxui.state.angle}`;
+                Sound.play(4);
+                return;
+            }
+
+            if (key == X) { // Clockwise - rotate currently selected item
+                uxui.state.angle > 0 && uxui.state.angle--;
+                document.querySelector(`#u-${uxui.state.x}-${uxui.state.y} im`).className = `angle-${uxui.state.angle}`;
+                Sound.play(4);
+                return;
+            }
+
+            // What is current [x, y] position state?
+            const last = [ uxui.state.x, uxui.state.y ];
+
+            if (key == Left) uxui.state.x > 0 && uxui.state.x--;
+            if (key == Right) uxui.state.x < 2 && uxui.state.x++;
+            if (key == Up) uxui.state.y > 0 && uxui.state.y--;
+            if (key == Down) uxui.state.y < 2 && uxui.state.y++;
+
+            // Deselect previous and select new; but only if UI [x, y] state changed
+            if (last[0] !== uxui.state.x || last[1] !== uxui.state.y) {
+
+                // Deselect previously selected item
+                uxui.state.previous.dataset.selected = 'no';
+                uxui.state.previous = document.querySelector(`#u-${uxui.state.x}-${uxui.state.y}`);
+                uxui.state.previous.dataset.selected = 'yes';
+
+                // Inherit rotation state from newly selected square
+                const im = document.querySelector(`#u-${uxui.state.x}-${uxui.state.y} ui`);
+                console.log(im.className.split('-')[1]);
+            }
+
+            Sound.play(1);
+        }); 
+
+        /* DOM loaded */
+        window.addEventListener('DOMContentLoaded', event => {
+          Sound.Initialize();
+          Sound.load(0, "http://www.getartbox.net/demo/ac/ac1.mp3");
+          Sound.load(1, "http://www.getartbox.net/demo/ac/ac2.mp3");
+          Sound.load(2, "http://www.getartbox.net/demo/ac/ac3.mp3");
+          Sound.load(3, "http://www.getartbox.net/demo/ac/ac4.mp3");
+          Sound.load(4, "http://www.getartbox.net/demo/ac/ac5.mp3");
+          Sound.load(5, "http://www.getartbox.net/demo/ac/ps3sfx1.mp3");
+          Sound.load(6, "http://www.getartbox.net/demo/ac/intro.mp3");
+        });
+
+        /* Your media (images, etc.) just loaded */
+        window.onload = event => {
+          
+        }
+
+    </script>
+
+    <style type = "text/css">
+
+        body {
+          position: relative;
+          background: black;
+          overflow: hidden;
+        }
+
+        #root {
+            position: absolute;
+            top: 100px;
+            left: 300px;
+        }
+
+        main {
+          height: 100%
+        }
+
+        * { font-family: Arial; }
+
+        /* padding shouldn't impact element width this is also CSS grid's default setting */
+        * { box-sizing: border-box }
+
+        /* vertical and horizontal align */
+        .f { display: flex; height: 100%; }
+        .v { align-items: center }
+        .h { justify-content: center }
+
+        /* Chrome applies blue "usability" background  to autofilled input boxes, but it's a nightmare for custom design */
+        input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px white inset !important }
+
+        /* Remove Chrome outline (same reason as above) */
+        *:focus { outline: none }
+
+        /* Mobile first, means this media query first -- use min-width in ascending order
+        Smallest phone screen (iphone, android, etc.) */
+        @media screen and (min-width: 600px) {
+        
+        }
+
+        /* Next wider view (iphone pro, etc) */
+        @media screen and (min-width: 800px) {
+        
+        }
+
+        /* Next wider view (tablets) */
+        @media screen and (min-width: 1000px) {
+        
+        }
+
+        /* Full screen desktop */
+        @media screen and (min-width: 1200px) {
+        
+        }
+
+        #root {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          transition: 0.3s;
+        }
+
+        @keyframes sel {
+          0% { transform: scale(1) }
+          50% { transform: scale(1.05) }
+          100% { transform: scale(1) }
+        }
+
+        @keyframes glo {
+          0% { box-shadow: 0 0 0 #000 }
+          50% { box-shadow: 0 0 20px lime, inset 0 0 150px lime }
+          100% { box-shadow: 0 0 0 #000 }
+        }
+
+        ui, im {
+          position: inherit;
+          display: inherit;
+          top: 0;
+          left: 0;
+          width: inherit;
+          height: inherit;
+          transition: 0.1s;
+        }
+
+        [data-selected=yes] { z-index: 1 }
+        [data-selected=yes] { animation-name: sel; animation-duration: 1s; animation-iteration-count: infinite; animation-timing-function: ease-out }
+        [data-selected=yes] im { animation-name: glo; animation-duration: 1s; animation-iteration-count: infinite; animation-timing-function: ease-out }
+
+        .angle-0 { transform: rotate(0deg) }
+        .angle-1 { transform: rotate(90deg) }
+        .angle-2 { transform: rotate(180deg) }
+        .angle-3 { transform: rotate(270deg) }
+        .angle-4 { transform: rotate(360deg) }
+        .angle-5 { transform: rotate(430deg) }
+
+    </style>
+
+    </head>
+
+    <body>
+        <main id = "root"></main>
+    </body>
+
+</html>
