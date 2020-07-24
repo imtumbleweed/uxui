@@ -57,9 +57,9 @@
         window.target.style.marginTop = `${finalY}px`;
         const count = window.target.dataset.n;
         const blockHeight = 45;
-        const halfBlock = 45/2;
         const containerHeight = 300;
-        const halfContainer = 300/2;
+        const halfBlock = blockHeight/2;
+        const halfContainer = containerHeight/2;
         let te =[]
         // Walk through all items on selected wheel
         for (let i = 0; i < count; i++) {
@@ -67,9 +67,8 @@
           let id = `#${window.id}-${i}`;
           let el = document.querySelector(id);
           let eY = halfContainer - finalY - ((blockHeight * i) + halfBlock);
-          let sc = halfContainer + ((blockHeight * i) + halfBlock)
-          let yy = eY;
-          let final = (yy * 300/360/1.4).toFixed(2);
+          let sc = halfContainer + ((blockHeight * i) + halfBlock);
+          let final = (eY * 300/360/1.4).toFixed(2);
           let scaler = 150 - Math.abs(finalY - 150 + ((blockHeight * i) + halfBlock));
           if (el) el.style.transform = `perspective(1200px) translateZ(${0}px) rotateX(${final}deg) scale(${scaler * 0.01})`;
         }
