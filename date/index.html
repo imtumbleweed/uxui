@@ -1,0 +1,209 @@
+<html>
+<head>
+
+    <title>iPhone Date Picker</title>
+
+    <meta charset="UTF-8">
+
+    <meta name = "description" content = "HTML starter reset file">
+    <meta name = "keywords" content = "html, css, events, mouse, keyboard, mobile first, media queries">
+    <meta name = "author" content = "You">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+
+    <!-- Note: type "module", not "javascript" -->
+    <script type = "module">
+
+    import { create } from "./element.js";
+    import { Mouse } from "./mouse.js";
+
+    const style = {
+     block: {
+      display: 'flex',
+      position: 'relative',
+      width: '100px',
+      height: '45px',
+      maxHeight: '45px',
+      background: '#fff',
+      color: 'gray',
+      fontSize: '28px'
+     }
+    };
+
+    /* Your DOM just loaded */
+    window.addEventListener('DOMContentLoaded', event => {
+
+      window.mouse = new Mouse();
+
+      const day = document.querySelector("#day");
+      const month = document.querySelector("#month");
+      const year = document.querySelector("#year");
+      const daybox = document.querySelector("#day-box");
+      const monthbox = document.querySelector("#month-box");
+      const yearbox = document.querySelector("#year-box");
+      const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+      // Add numbers to
+      new Array(12).fill(12).forEach((item, index) => create(month, "div", `month-${index}`, style.block, 'f v h noselect', monthNames[index], {}));
+      new Array(31).fill(31).forEach((item, index) => create(day, "div", `day-${index}`, style.block, 'f v h noselect', index, {}));
+      new Array(50).fill(50).forEach((item, index) => create(year, "div", `year-${index}`, style.block, 'f v h noselect', 2010-index, {}));
+
+      day.addEventListener("mousedown", target => { window.target = daybox; window.id = "day" });
+      month.addEventListener("mousedown", target => { window.target = monthbox; window.id = "month" });
+      year.addEventListener("mousedown", target => { window.target = yearbox; window.id = "year" });
+
+      window.addEventListener("mousemove", target => {
+       if (window.target) {
+        const finalY = `${parseInt(window.target.dataset.y) + window.mouse.difference.y}`;
+        window.target.style.marginTop = `${finalY}px`;
+        const count = window.target.dataset.n;
+        const blockHeight = 45;
+        const halfBlock = 45/2;
+        const containerHeight = 300;
+        const halfContainer = 300/2;
+        let te =[]
+        // Walk through all items on selected wheel
+        for (let i = 0; i < count; i++) {
+          let offsetY = Math.abs(finalY);
+          let id = `#${window.id}-${i}`;
+          let el = document.querySelector(id);
+          let eY = halfContainer - finalY - ((blockHeight * i) + halfBlock);
+          let sc = halfContainer + ((blockHeight * i) + halfBlock)
+          let yy = eY;
+          let final = (yy * 300/360/1.4).toFixed(2);
+          let scaler = 150 - Math.abs(finalY - 150 + ((blockHeight * i) + halfBlock));
+          if (el) el.style.transform = `perspective(1200px) translateZ(${0}px) rotateX(${final}deg) scale(${scaler * 0.01})`;
+        }
+       }
+      });
+
+      // Reset
+      window.addEventListener("mouseup", target => {
+       window.target.dataset.y = `${parseInt(window.target.dataset.y) + window.mouse.difference.y}`;
+       window.target = null;
+      });
+    });
+
+    window.onload = event => { /* Your media (images, etc.) just loaded */
+
+    }
+
+  </script>
+
+    <style type = "text/css">
+   #date { width: 300px; height: 300px; }
+   #day { width: 100px; height: 300px; overflow: hidden; }
+   #month { width: 100px; height: 300px; overflow: hidden; }
+   #year { width: 100px; height: 300px; overflow: hidden; }
+  </style>
+
+    <style style = "text/css">
+
+        body {}
+
+        #root {}
+
+        main { height: 100% }
+
+        * { font-family: Arial; }
+
+        /* padding shouldn't impact element width this is also CSS grid's default setting */
+        * { box-sizing: border-box }
+
+        /* vertical and horizontal align */
+        .f { display: flex; height: 100% }
+        .v { align-items: center }
+        .h { justify-content: center }
+        .r { flex-direction: row }
+        .c { flex-direction: column }
+        .s { justify-content: space-around }
+        .p { padding: 10px }
+        .b { font-size: 28px }
+
+        .abs { position: absolute; }
+        .rel { position: relative; }
+
+        /* default test item */
+        .f section {
+        width: auto;
+        height: auto;
+        background: white;
+        color: #000;
+        }
+
+        /* Chrome applies blue "usability" background  to autofilled input boxes, but it's a nightmare for custom design */
+        input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px white inset !important }
+
+        /* Remove Chrome outline (same reason as above) */
+        *:focus { outline: none }
+
+        /* Mobile first, means this media query first -- use min-width in ascending order
+        Smallest phone screen (iphone, android, etc.) */
+        @media screen and (min-width: 600px) {
+        body { background: black; }
+        }
+
+        /* Next wider view (iphone pro, etc) */
+        @media screen and (min-width: 800px) {
+        * { background: yellow; }
+        }
+
+        /* Next wider view (tablets) */
+        @media screen and (min-width: 1000px) {
+        * { background: green; }
+        }
+
+        /* Full screen desktop */
+        @media screen and (min-width: 1200px) {
+        * { background: blue; }
+        }
+
+        .noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+        }
+
+        .noevents {
+        pointer-events: none;
+        }
+
+        .hand { cursor: hand; }
+
+        #frame {
+        position: absolute;
+        top: 170px;
+        left: -32px;
+        width: 365px;
+        height: 60px;
+        border: 2px solid teal;
+        border-radius: 7px;
+        background: transparent;
+        z-index: 1000;
+        opacity: 0.7
+        }
+
+    </style>
+</head>
+<body>
+ <main id = "root">
+  <article class = "f v h c">
+   <section style = "width: 300px" class = "f v h r s rel">
+    <section class = "f v h p b">Month</section>
+    <section class = "f v h p b">Day</section>
+    <section class = "f v h p b">Year</section>
+    <section id = "frame" class = "noselect noevents"></section>
+   </section>
+   <section class = "f v h" style = "background: white">
+    <section id = "date" class = "f v h r">
+     <section id = "month" class = "noselect hand"><div id = "month-box" data-n = "12" data-y = "0"></div></section>
+     <section id = "day" class = "noselect hand"><div id = "day-box" data-n = "31" data-y = "0"></div></section>
+     <section id = "year" class = "noselect hand"><div id = "year-box" data-n = "50" data-y = "0"></div></section>
+    </section>
+   </section>
+  </article>
+ </main>
+</body>
+</html>
