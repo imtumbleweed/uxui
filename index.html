@@ -6,41 +6,31 @@
     <meta name = "keywords" content = "ux, ui, html, css, events, mouse, keyboard, media queries">
     <meta name = "author" content = "You">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
-
     <!-- sheets -->
     <link rel = "stylesheet" href = "uxui.css">
-
     <!-- Note: type "module", not "javascript" -->
     <script type = "module">
-
         // This gets us sound fx
         import { SoundStation } from "./audio.js";
-
         // JavaScript Audio API
-        let Sound = new SoundStation();
-        
+        let Sound = new SoundStation();        
         // Map variables representing keys to ASCII codes
         let [ A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z ]
           = Array.from({ length: 26 }, (v, i) => 65 + i);
-
         // Misc keys
         const Delete = 46;
         const Shift = 16;
         const Ctrl = 17;
         const Alt = 18;
-
         // Arrow keys
         const Left = 37;
         const Right = 39;
         const Up = 38;
         const Down = 40;
-
         // Space key
         const Space = 32;
-
         // Placeholder
         function func() { }
-
         // State object
         class UXUI {
           constructor() {
@@ -96,49 +86,41 @@
             this.state.previous.dataset.selected = 'yes';
           }
         }
-
         // Create UXUI object
         let uxui = new UXUI();
-
         // Handle keyboard
         document.body.addEventListener("keydown", event => {
-
             let key = event.which || event.keyCode;
-
             if (key == Z) { // Counter-clockwise - rotate currently selected item
                 uxui.state.angle < 4 && uxui.state.angle++;
                 document.querySelector(`#u-${uxui.state.x}-${uxui.state.y} im`).className = `angle-${uxui.state.angle}`;
                 Sound.play(4);
                 return;
             }
-
             if (key == X) { // Clockwise - rotate currently selected item
                 uxui.state.angle > 0 && uxui.state.angle--;
                 document.querySelector(`#u-${uxui.state.x}-${uxui.state.y} im`).className = `angle-${uxui.state.angle}`;
                 Sound.play(4);
                 return;
             }
-
             // What is current [x, y] position state?
             const last = [ uxui.state.x, uxui.state.y ];
-
             if (key == Left) uxui.state.x > 0 && uxui.state.x--;
             if (key == Right) uxui.state.x < 2 && uxui.state.x++;
             if (key == Up) uxui.state.y > 0 && uxui.state.y--;
             if (key == Down) uxui.state.y < 2 && uxui.state.y++;
-
             // Deselect previous and select new; but only if UI [x, y] state changed
             if (last[0] !== uxui.state.x || last[1] !== uxui.state.y) {
-
                 // Deselect previously selected item
                 uxui.state.previous.dataset.selected = 'no';
                 uxui.state.previous = document.querySelector(`#u-${uxui.state.x}-${uxui.state.y}`);
                 uxui.state.previous.dataset.selected = 'yes';
+                // Inherit rotation state from newly selected square
+                const im = document.querySelector(`#u-${uxui.state.x}-${uxui.state.y} ui`);
+                console.log(im.className.split('-')[1]);
             }
-
             Sound.play(1);
-        }); 
-
+        });
         /* DOM loaded */
         window.addEventListener('DOMContentLoaded', event => {
           Sound.Initialize();
@@ -150,18 +132,9 @@
           Sound.load(5, "http://www.getartbox.net/demo/ac/ps3sfx1.mp3");
           Sound.load(6, "http://www.getartbox.net/demo/ac/intro.mp3");
         });
-
         /* Your media (images, etc.) just loaded */
-        window.onload = event => {
-          
-        }
-
+        window.onload = event => {}
     </script>
-
     </head>
-
-    <body>
-        <main id = "root"></main>
-    </body>
-
+    <body><main id = "root"></main></body>
 </html>
